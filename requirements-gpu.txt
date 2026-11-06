@@ -1,0 +1,5 @@
+# Combinación publicada oficialmente para Windows/Linux con CUDA 12.8.
+# Usar SOLO en el entorno nuevo para GPU, no en el entorno CPU de esta PC.
+--index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0
+torchvision==0.26.0

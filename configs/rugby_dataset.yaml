@@ -1,0 +1,11 @@
+# Plantilla: todavía NO contiene imágenes ni etiquetas.
+# train_yolo26n.py interpreta path respecto de la ubicación de ESTE archivo.
+path: ../data/datasets/rugby
+train: images/train
+val: images/val
+
+# IDs propios del dataset: NO son los IDs COCO del modelo preentrenado.
+names:
+  0: player
+  1: ball
+  2: referee

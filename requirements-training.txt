@@ -1,0 +1,4 @@
+# Instalar PRIMERO requirements-gpu.txt en un entorno nuevo de la PC con NVIDIA.
+# No requiere las herramientas de descarga de videos.
+ultralytics==8.4.202
+PyYAML>=6.0,<7
