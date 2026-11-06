@@ -11,7 +11,8 @@ incorporarán pelota, equipos, identidades y reconocimiento de eventos.
 - Inspección de videos mediante fotogramas con marcas de tiempo.
 - Script de inferencia en CPU con YOLO26n preentrenado, con exportación de video,
   detecciones y tiempos. No se ha realizado entrenamiento específico de rugby.
-- Entrenamiento GPU preparado en `scripts/train_yolo26n.py`; todavía no ejecutado.
+- Fine-tuning GPU iniciado: 26/50 épocas completadas; checkpoint reanudable.
+  Continuar con `scripts/resume_yolo26n.py`; evaluar con `scripts/evaluate_yolo26n.py`.
 
 ## Entrenar en la PC con NVIDIA
 

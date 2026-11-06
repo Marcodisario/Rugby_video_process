@@ -1,8 +1,62 @@
 # Entrenar YOLO26n en la otra PC
 
+## Reanudar y evaluar en esta PC
+
+Seleccionar `.venv-gpu/Scripts/python.exe` en el editor.
+
+- Correr `scripts/resume_yolo26n.py` para continuar la ejecución
+  `yolo26n_rugby_20261105_232157` desde `last.pt` (26 épocas completadas de 50).
+  Conserva el estado del optimizador y hace una copia de los checkpoints,
+  argumentos y CSV antes de reanudar. No usar el script de entrenamiento
+  inicial para continuar: ese script crea un experimento nuevo.
+- Correr `scripts/evaluate_yolo26n.py` para evaluar `best.pt` de esa ejecución.
+  Usa test, sin entrenar, y guarda `resumen.txt`, `metrics.json`, `per_class.csv`
+  y gráficos en una carpeta nueva de `outputs/evaluation/`. Se puede evaluar
+  el mejor checkpoint actual incluso antes de completar las 50 épocas.
+- Ambos admiten `--check` para comprobar sin entrenar ni evaluar, y `--weights`
+  para seleccionar otro checkpoint explícitamente.
+
+Se verificó que la imagen del error vuelve a ser legible y coincide con el
+original: la causa transitoria exacta no pudo certificarse. Para evitar
+dependencia de imágenes sincronizadas, los tres scripts usan una copia local
+en `~/AppData/Local/RugbyVideoProcess/datasets/rugby_tokyo_v3`. Se reconstruye
+desde el ZIP con las mismas etiquetas adaptadas y se verifica por hashes.
+No se modifican los checkpoints durante `--check`.
+
+Precisión indica qué proporción de detecciones fue correcta; recall, qué
+proporción de objetos etiquetados encontró. mAP50 y mAP50-95 resumen la calidad
+de detección con distintos requisitos de coincidencia de las cajas. Los tiempos
+son milisegundos por imagen medidos durante evaluación; no son FPS de un video
+con lectura, tracking y escritura. Este test público no certifica desempeño
+en partidos del club ni separación por partido entre train y test.
+
+## Inicio en esta PC
+
+La GPU detectada en esta PC es una RTX 5060 Laptop de 8 GB. El entorno local
+de entrenamiento se encuentra en `.venv-gpu`.
+
+- En el editor seleccionar `.venv-gpu/Scripts/python.exe` y usar el botón
+  de correr sobre `scripts/train_yolo26n.py` para iniciar el entrenamiento.
+- Comprobar sin entrenar desde PowerShell:
+  `.venv-gpu\Scripts\python.exe scripts\train_yolo26n.py --check`.
+- Si falta memoria, ejecutar el script con `--batch 2`.
+
+El dataset público Rugby model v3 ya está descargado en
+`data/datasets/rugby_tokyo_v3`: ZIP y exportación original preservados, y copia
+`prepared` con las clases player=0, ball=1, referee=2. La configuración
+`configs/rugby_dataset.yaml` apunta a esa copia (1724 train y 166 val).
+Hay otras 82 imágenes de prueba en `prepared/images/test`, reservadas para
+evaluación posterior; el entrenamiento no las usa.
+
+Se conservaron los grupos originales y se excluyeron de la copia preparada
+las imágenes sin cajas de las tres clases objetivo. La revisión verificó
+imágenes legibles, formato, IDs, coordenadas y ausencia de duplicados exactos
+entre grupos; no certifica todas las anotaciones ni independencia por partido.
+Hay fotogramas cercanos y montajes en la fuente; para medir desempeño real
+conviene evaluar además con un partido propio independiente.
+
 El script está preparado, pero **no se ejecutó ningún entrenamiento**.
-Falta incorporar un dataset etiquetado: los MP4 y los CSV de predicciones de
-la primera prueba no son por sí solos un dataset de entrenamiento supervisado.
+Los MP4 y CSV de predicciones no son por sí solos un dataset supervisado.
 
 ## Qué va a entrenar
 

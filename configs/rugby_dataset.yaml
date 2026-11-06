@@ -1,6 +1,7 @@
-# Plantilla: todavía NO contiene imágenes ni etiquetas.
+# Rugby model v3, University of Tokyo, CC BY 4.0; copia adaptada a tres clases.
+# Original y atribución en data/datasets/rugby_tokyo_v3/original.
 # train_yolo26n.py interpreta path respecto de la ubicación de ESTE archivo.
-path: ../data/datasets/rugby
+path: ../data/datasets/rugby_tokyo_v3/prepared
 train: images/train
 val: images/val
 

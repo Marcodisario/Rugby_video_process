@@ -68,6 +68,7 @@ def prepare_dataset(config: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DEFAULTS["data"])
+    parser.add_argument("--check", action="store_true", help="Comprobar GPU y dataset sin entrenar ni crear resultados.")
     for name in ("device", "epochs", "batch", "imgsz", "workers"):
         parser.add_argument(f"--{name}", type=int, default=DEFAULTS[name])
     args = parser.parse_args()
@@ -75,6 +76,11 @@ def main() -> None:
         parser.error("GPU/workers deben ser >= 0; epochs, batch e imgsz deben ser > 0.")
     if args.imgsz % 32:
         parser.error("Usar imgsz múltiplo de 32, por ejemplo 640 o 960.")
+
+    # El dataset predeterminado se prepara fuera de la carpeta sincronizada.
+    if args.data.resolve() == DEFAULTS["data"].resolve():
+        from yolo_runtime import local_dataset
+        args.data = local_dataset()
 
     os.environ.setdefault("YOLO_CONFIG_DIR", str(ROOT / ".cache" / "ultralytics"))
     os.environ.setdefault("MPLCONFIGDIR", str(ROOT / ".cache" / "matplotlib"))
@@ -103,6 +109,10 @@ def main() -> None:
         dataset = prepare_dataset(args.data.resolve())
     except (ValueError, OSError) as exc:
         raise SystemExit(str(exc)) from exc
+
+    if args.check:
+        print("GPU y dataset listos. No se inició entrenamiento.", flush=True)
+        return
 
     # El YAML resuelto queda junto a los resultados. No modifica el original.
     run_dir = ROOT / "outputs" / "training" / f"yolo26n_rugby_{datetime.now():%Y%m%d_%H%M%S}"
